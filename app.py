@@ -1,524 +1,539 @@
 # app.py
-# NBA Fatigue Dashboard (minimal, portfolio-ready)
-# Data inputs:
-#   - data_processed/nba_2324_fatigue_matchups.csv  (required)
-#   - data_processed/team_games_2324_with_fatigue.csv (optional)
+# NBA Fatigue Dashboard (portfolio-ready, minimalist, WHITE UI)
+# Fixes:
+# - Forces ALL fonts to dark (Streamlit + Plotly) so nothing “disappears”
+# - Sidebar widgets are light with dark text (no black boxes)
+# - Restores KPIs visibility
+# - No Data paths exposed, no Data Table tab, no page icon
+# - Team rankings from team_games CSV, NBA-only filter
+# - Robust trendline (won't crash)
 
-import os
+from __future__ import annotations
+
 from pathlib import Path
+from typing import Optional, Tuple, List
+
 import numpy as np
 import pandas as pd
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 
-# -----------------------------
-# Page config (minimal)
-# -----------------------------
+
+# =============================
+# Page config (no icon, wide)
+# =============================
 st.set_page_config(
     page_title="NBA Fatigue Dashboard",
-    page_icon="📊",
     layout="wide",
 )
 
+
+# =============================
+# White, professional UI CSS
+# IMPORTANT: Do NOT set global "* { color: ... }" because it breaks Streamlit widgets/KPIs.
+# We set targeted styles only.
+# =============================
 st.markdown(
     """
-    <style>
-      .block-container { padding-top: 1.5rem; padding-bottom: 1.5rem; }
-      [data-testid="stSidebar"] { padding-top: 1.0rem; }
-    </style>
-    """,
+<style>
+/* ---- App background ---- */
+.stApp {
+  background: #ffffff;
+}
+
+/* ---- Main text defaults ---- */
+h1, h2, h3 { color: #111827 !important; font-weight: 700; }
+p, span, label, div { color: #111827; }
+
+/* ---- Sidebar ---- */
+section[data-testid="stSidebar"]{
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+}
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] div {
+  color: #111827 !important;
+}
+
+/* ---- Inputs: make them light (not black boxes) ---- */
+section[data-testid="stSidebar"] input,
+section[data-testid="stSidebar"] textarea {
+  background: #ffffff !important;
+  color: #111827 !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 10px !important;
+}
+
+section[data-testid="stSidebar"] div[data-baseweb="select"] > div {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 10px !important;
+}
+section[data-testid="stSidebar"] div[data-baseweb="select"] span {
+  color: #111827 !important;
+}
+
+/* Date input container */
+section[data-testid="stSidebar"] div[data-testid="stDateInput"] > div {
+  background: #ffffff !important;
+  border-radius: 10px !important;
+}
+section[data-testid="stSidebar"] div[data-testid="stDateInput"] input {
+  color: #111827 !important;
+}
+
+/* Slider label/value */
+section[data-testid="stSidebar"] div[data-testid="stSlider"] * {
+  color: #111827 !important;
+}
+
+/* ---- Tabs ---- */
+button[data-baseweb="tab"]{
+  background: #ffffff !important;
+  color: #374151 !important;
+  border-bottom: 2px solid transparent !important;
+}
+button[data-baseweb="tab"][aria-selected="true"]{
+  color: #111827 !important;
+  border-bottom: 2px solid #2563eb !important;
+}
+
+/* ---- Metrics (KPIs) ---- */
+div[data-testid="stMetric"] * {
+  color: #111827 !important;
+}
+
+/* ---- Remove Streamlit chrome ---- */
+header, footer { visibility: hidden; }
+</style>
+""",
     unsafe_allow_html=True,
 )
 
-# -----------------------------
-# Helpers
-# -----------------------------
-NBA_TEAMS = sorted([
+
+# =============================
+# Palette
+# =============================
+PLOT_TEMPLATE = "plotly_white"
+TEXT_DARK = "#111827"
+GRID_COLOR = "rgba(0,0,0,0.08)"
+
+COLOR_HOME_ADV = "#2563EB"   # blue
+COLOR_AWAY_ADV = "#F59E0B"   # orange
+COLOR_NEUTRAL = "#9CA3AF"    # gray
+COLOR_BAR = "#3B82F6"        # bar blue
+
+
+# =============================
+# Repo data files (hidden)
+# =============================
+MATCHUPS_PATH = "data_processed/nba_2324_fatigue_matchups.csv"
+TEAM_GAMES_PATH = "data_processed/team_games_2324_with_fatigue.csv"
+
+NBA_TEAMS = {
     "Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets", "Chicago Bulls",
     "Cleveland Cavaliers", "Dallas Mavericks", "Denver Nuggets", "Detroit Pistons",
-    "Golden State Warriors", "Houston Rockets", "Indiana Pacers", "LA Clippers",
-    "Los Angeles Lakers", "Memphis Grizzlies", "Miami Heat", "Milwaukee Bucks",
-    "Minnesota Timberwolves", "New Orleans Pelicans", "New York Knicks",
-    "Oklahoma City Thunder", "Orlando Magic", "Philadelphia 76ers", "Phoenix Suns",
-    "Portland Trail Blazers", "Sacramento Kings", "San Antonio Spurs", "Toronto Raptors",
-    "Utah Jazz", "Washington Wizards"
-])
+    "Golden State Warriors", "Houston Rockets", "Indiana Pacers", "LA Clippers", "Los Angeles Lakers",
+    "Memphis Grizzlies", "Miami Heat", "Milwaukee Bucks", "Minnesota Timberwolves",
+    "New Orleans Pelicans", "New York Knicks", "Oklahoma City Thunder", "Orlando Magic",
+    "Philadelphia 76ers", "Phoenix Suns", "Portland Trail Blazers", "Sacramento Kings",
+    "San Antonio Spurs", "Toronto Raptors", "Utah Jazz", "Washington Wizards"
+}
 
 
-def pick_col(df: pd.DataFrame, candidates: list[str]) -> str | None:
-    cols = set(df.columns)
-    for c in candidates:
-        if c in cols:
-            return c
-    # case-insensitive fallback
-    lower_map = {c.lower(): c for c in df.columns}
-    for c in candidates:
-        if c.lower() in lower_map:
-            return lower_map[c.lower()]
+# =============================
+# Helpers
+# =============================
+def resolve_path(p: str) -> Path:
+    path = Path(p)
+    if path.is_absolute():
+        return path
+    return (Path(__file__).parent / path).resolve()
+
+
+def load_csv(path: str) -> pd.DataFrame:
+    p = resolve_path(path)
+    if not p.exists():
+        raise FileNotFoundError(f"Missing file: {p}")
+    return pd.read_csv(p)
+
+
+def pick_col(df: pd.DataFrame, candidates: List[str]) -> Optional[str]:
+    cols = {c.lower(): c for c in df.columns}
+    for cand in candidates:
+        if cand.lower() in cols:
+            return cols[cand.lower()]
     return None
 
 
-def to_datetime_safe(s: pd.Series) -> pd.Series:
-    return pd.to_datetime(s, errors="coerce")
-
-
-def numeric_safe(s: pd.Series) -> pd.Series:
+def safe_numeric(s: pd.Series) -> pd.Series:
     return pd.to_numeric(s, errors="coerce")
 
 
-def add_simple_trendline(fig: go.Figure, x: np.ndarray, y: np.ndarray, name: str) -> go.Figure:
-    """
-    Robust linear trendline without statsmodels.
-    Avoids crashes from NaN/inf, too-few points, constant x, or numerical issues.
-    """
-    x = np.asarray(x, dtype=float)
-    y = np.asarray(y, dtype=float)
+def coerce_datetime(s: pd.Series) -> pd.Series:
+    return pd.to_datetime(s, errors="coerce")
 
-    mask = np.isfinite(x) & np.isfinite(y)
+
+def keep_nba_teams(df: pd.DataFrame, team_col: Optional[str]) -> pd.DataFrame:
+    if not team_col or team_col not in df.columns:
+        return df
+    out = df.copy()
+    out[team_col] = out[team_col].astype(str).str.strip()
+    return out[out[team_col].isin(NBA_TEAMS)].copy()
+
+
+def safe_trendline_xy(x: pd.Series, y: pd.Series) -> Optional[Tuple[np.ndarray, np.ndarray]]:
+    x = safe_numeric(x)
+    y = safe_numeric(y)
+    mask = np.isfinite(x.values) & np.isfinite(y.values)
     x2, y2 = x[mask], y[mask]
-
-    if len(x2) < 8:
-        return fig
-
-    if np.unique(x2).size < 2 or np.ptp(x2) < 1e-9:
-        return fig
-
+    if len(x2) < 2 or x2.nunique() < 2:
+        return None
     try:
-        # Center/scale for stability
-        xm = x2.mean()
-        xs = x2.std()
-        if xs < 1e-12:
-            return fig
-        xz = (x2 - xm) / xs
-
-        m, b = np.polyfit(xz, y2, 1)
-
-        x_line = np.linspace(x2.min(), x2.max(), 120)
-        x_line_z = (x_line - xm) / xs
-        y_line = m * x_line_z + b
-
-        fig.add_trace(go.Scatter(x=x_line, y=y_line, mode="lines", name=name))
-        return fig
+        m, b = np.polyfit(x2.values, y2.values, 1)
     except Exception:
-        return fig
+        return None
+    x_line = np.array([x2.min(), x2.max()])
+    y_line = m * x_line + b
+    return x_line, y_line
 
 
+def apply_plotly_white(fig: go.Figure, title: str, x: str, y: str) -> go.Figure:
+    """Hard-force dark axis titles/ticks so Streamlit theme can’t turn them white."""
+    fig.update_layout(
+        template=PLOT_TEMPLATE,
+        paper_bgcolor="#ffffff",
+        plot_bgcolor="#ffffff",
+        font=dict(color=TEXT_DARK),
+        title=dict(text=title, x=0, font=dict(color=TEXT_DARK, size=20)),
+        margin=dict(l=20, r=20, t=70, b=60),
+        legend=dict(
+            title=None,
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="left",
+            x=0,
+            font=dict(color=TEXT_DARK),
+        ),
+    )
+    fig.update_xaxes(
+        title=dict(text=x, font=dict(color=TEXT_DARK)),
+        tickfont=dict(color=TEXT_DARK),
+        showgrid=True,
+        gridcolor=GRID_COLOR,
+        zeroline=False,
+    )
+    fig.update_yaxes(
+        title=dict(text=y, font=dict(color=TEXT_DARK)),
+        tickfont=dict(color=TEXT_DARK),
+        showgrid=True,
+        gridcolor=GRID_COLOR,
+        zeroline=False,
+    )
+    fig.update_traces(hoverlabel=dict(bgcolor="white", font_color=TEXT_DARK))
+    return fig
+
+
+# =============================
+# Load data (cached)
+# =============================
 @st.cache_data(show_spinner=False)
-def load_csv(path: str) -> pd.DataFrame:
-    return pd.read_csv(path)
+def get_data() -> tuple[pd.DataFrame, pd.DataFrame]:
+    return load_csv(MATCHUPS_PATH), load_csv(TEAM_GAMES_PATH)
 
 
-def filter_to_nba_teams(df: pd.DataFrame, home_col: str, away_col: str) -> pd.DataFrame:
-    return df[df[home_col].isin(NBA_TEAMS) & df[away_col].isin(NBA_TEAMS)].copy()
-
-
-def compute_win_pct_by_bin(df: pd.DataFrame, x_col: str, win_col: str, bin_size: float) -> pd.DataFrame:
-    d = df[[x_col, win_col]].copy()
-    d[x_col] = numeric_safe(d[x_col])
-    d[win_col] = numeric_safe(d[win_col])
-    d = d.dropna(subset=[x_col, win_col])
-
-    if d.empty:
-        return pd.DataFrame(columns=["fatigue_bin", "home_win_pct", "games"])
-
-    # Bin edges like Tableau-style: center bins at multiples
-    # We'll compute bin label = floor(x/bin_size)*bin_size
-    d["fatigue_bin"] = np.floor(d[x_col] / bin_size) * bin_size
-    out = (
-        d.groupby("fatigue_bin", as_index=False)
-         .agg(home_win_pct=(win_col, "mean"), games=(win_col, "size"))
-         .sort_values("fatigue_bin")
-    )
-    return out
-
-
-def fatigue_advantage_category(df: pd.DataFrame, fatigue_diff_col: str) -> pd.Series:
-    x = numeric_safe(df[fatigue_diff_col])
-    # fatigue_diff = home - away
-    # negative => home less fatigued
-    return np.select(
-        [x < 0, x > 0],
-        ["Home fatigue advantage", "Away fatigue advantage"],
-        default="Even"
-    )
-
-
-# -----------------------------
-# Sidebar (data paths + filters)
-# -----------------------------
-st.sidebar.header("Data")
-
-default_matchups = "data_processed/nba_2324_fatigue_matchups.csv"
-default_team_games = "data_processed/team_games_2324_with_fatigue.csv"
-
-matchups_path = st.sidebar.text_input(
-    "Matchups CSV path", value=default_matchups)
-team_games_path = st.sidebar.text_input(
-    "Team-games CSV path (optional)", value=default_team_games)
-
-if not Path(matchups_path).exists():
-    st.error(f"Matchups file not found: {matchups_path}")
+try:
+    df_match, df_team = get_data()
+except Exception as e:
+    st.error(f"App could not start: {e}")
     st.stop()
 
-matchups = load_csv(matchups_path)
 
-# Identify core columns (robust to naming)
-col_game_id = pick_col(matchups, ["GAME_ID", "Game Id", "game_id"])
-col_game_date = pick_col(matchups, ["GAME_DATE", "Game Date", "game_date"])
-col_home_team = pick_col(matchups, ["home_team", "Home Team"])
-col_away_team = pick_col(matchups, ["away_team", "Away Team"])
-col_home_pts = pick_col(matchups, ["home_pts", "Home Pts", "Home Points"])
-col_away_pts = pick_col(matchups, ["away_pts", "Away Pts", "Away Points"])
-col_home_win = pick_col(matchups, ["home_win", "Home Win"])
+# =============================
+# Detect columns (matchups)
+# =============================
+col_date = pick_col(df_match, ["Game Date", "game_date", "date"])
+col_home_team = pick_col(df_match, ["Home Team", "home_team", "HOME_TEAM"])
+col_away_team = pick_col(df_match, ["Away Team", "away_team", "AWAY_TEAM"])
+col_home_pts = pick_col(
+    df_match, ["Home Pts", "home_pts", "HOME_PTS", "home_points"])
+col_away_pts = pick_col(
+    df_match, ["Away Pts", "away_pts", "AWAY_PTS", "away_points"])
 col_point_diff = pick_col(
-    matchups, ["point_diff", "Point Diff", "Point Margin"])
-col_fatigue_diff = pick_col(matchups, ["fatigue_diff", "Fatigue Diff"])
-col_rest_diff = pick_col(matchups, ["rest_diff", "Rest Diff"])
-col_travel_diff = pick_col(matchups, ["travel_diff", "Travel Diff"])
+    df_match, ["Point Diff", "point_diff", "point_margin", "margin"])
+col_fatigue_diff = pick_col(
+    df_match, ["Fatigue Diff", "fatigue_diff", "Fatigue Difference"])
+col_home_win = pick_col(
+    df_match, ["Home Win", "home_win", "home_wl", "HOME_WIN", "Home WL"])
 
-missing_required = [name for name, col in {
-    "GAME_DATE": col_game_date,
-    "home_team": col_home_team,
-    "away_team": col_away_team,
-    "home_win": col_home_win,
-    "point_diff": col_point_diff,
-    "fatigue_diff": col_fatigue_diff,
-}.items() if col is None]
+df = df_match.copy()
+if col_date:
+    df[col_date] = coerce_datetime(df[col_date])
 
-if missing_required:
-    st.error("Your matchups CSV is missing required columns: " +
-             ", ".join(missing_required))
-    st.stop()
+if col_point_diff is None and col_home_pts and col_away_pts:
+    df["Point Diff (Home-Away)"] = safe_numeric(df[col_home_pts]
+                                                ) - safe_numeric(df[col_away_pts])
+    col_point_diff = "Point Diff (Home-Away)"
 
-# Normalize types
-df = matchups.copy()
-df[col_game_date] = to_datetime_safe(df[col_game_date])
-df[col_home_win] = numeric_safe(df[col_home_win])
-df[col_point_diff] = numeric_safe(df[col_point_diff])
-df[col_fatigue_diff] = numeric_safe(df[col_fatigue_diff])
+if col_fatigue_diff:
+    df[col_fatigue_diff] = safe_numeric(df[col_fatigue_diff])
 
-# Filter out non-NBA teams (fix for the weird teams)
-df = filter_to_nba_teams(df, col_home_team, col_away_team)
+if col_home_win:
+    df[col_home_win] = (safe_numeric(df[col_home_win]) > 0).astype(int)
 
-# Add derived fields
-df["Fatigue Advantage"] = fatigue_advantage_category(df, col_fatigue_diff)
 
-# Date range filter
-st.sidebar.header("Filters")
+# =============================
+# Detect columns (team_games)
+# =============================
+col_team_team = pick_col(df_team, ["TEAM_NAME", "team", "team_name", "Team"])
+col_team_date = pick_col(df_team, ["GAME_DATE", "game_date", "date"])
+col_team_fatigue = pick_col(
+    df_team, ["fatigue_score", "Fatigue Score", "FATIGUE_SCORE"])
 
-min_date = df[col_game_date].min()
-max_date = df[col_game_date].max()
-if pd.isna(min_date) or pd.isna(max_date):
-    # If parsing failed, fall back to no date filter
-    date_range = None
-    st.sidebar.warning(
-        "Game Date could not be parsed. Date filters are disabled.")
-else:
-    date_range = st.sidebar.date_input(
-        "Game date range",
-        value=(min_date.date(), max_date.date()),
-        min_value=min_date.date(),
-        max_value=max_date.date(),
-    )
 
-team_mode = st.sidebar.selectbox(
-    "Team filter", ["All games", "Home team", "Away team"])
-
-team_selected = None
-if team_mode != "All games":
-    team_selected = st.sidebar.selectbox(
-        "Select team", ["(Choose)"] + NBA_TEAMS)
-    if team_selected == "(Choose)":
-        team_selected = None
-
-bin_size = st.sidebar.selectbox("Fatigue bin size", [0.25, 0.5, 1.0], index=1)
-top_n = st.sidebar.slider("Top N teams (rankings)",
-                          min_value=5, max_value=30, value=30, step=1)
-
-# Apply filters
-f = df.copy()
-if date_range is not None:
-    start_d, end_d = date_range
-    f = f[(f[col_game_date].dt.date >= start_d)
-          & (f[col_game_date].dt.date <= end_d)]
-
-if team_selected is not None and team_mode == "Home team":
-    f = f[f[col_home_team] == team_selected]
-elif team_selected is not None and team_mode == "Away team":
-    f = f[f[col_away_team] == team_selected]
-
-# -----------------------------
+# =============================
 # Header
-# -----------------------------
+# =============================
 st.title("NBA Fatigue Dashboard")
-st.caption("Data source: nba_api LeagueGameFinder (season 2023–24)")
+st.caption("Exploring how rest and travel relate to game outcomes (2023–24).")
 
-kpi1, kpi2, kpi3, kpi4 = st.columns(4)
-with kpi1:
-    st.metric("Games", f"{len(f):,}")
-with kpi2:
-    st.metric("Home win rate",
-              f"{(f[col_home_win].mean() * 100):.1f}%" if len(f) else "—")
-with kpi3:
-    st.metric("Avg fatigue diff (home − away)",
-              f"{f[col_fatigue_diff].mean():.3f}" if len(f) else "—")
-with kpi4:
-    st.metric("Avg point diff (home − away)",
-              f"{f[col_point_diff].mean():.2f}" if len(f) else "—")
+
+# =============================
+# Sidebar filters
+# =============================
+with st.sidebar:
+    st.subheader("Filters")
+
+    date_range = None
+    if col_date and df[col_date].notna().any():
+        dmin = df[col_date].min().date()
+        dmax = df[col_date].max().date()
+        date_range = st.date_input("Game date range", value=(dmin, dmax))
+
+    team_filter = "All games"
+    if col_home_team and col_away_team:
+        teams = sorted(
+            set(
+                df[col_home_team].dropna().astype(str).str.strip().tolist()
+                + df[col_away_team].dropna().astype(str).str.strip().tolist()
+            )
+        )
+        teams = [t for t in teams if t in NBA_TEAMS] or teams
+        team_filter = st.selectbox(
+            "Team filter", ["All games"] + teams, index=0)
+
+    bin_size = st.selectbox("Fatigue bin size", [0.25, 0.5, 1.0], index=1)
+    top_n = st.slider("Top N teams (rankings)", min_value=10,
+                      max_value=30, value=30, step=1)
+
+
+# =============================
+# Apply filters
+# =============================
+fdf = df.copy()
+
+if date_range and col_date:
+    start, end = date_range
+    start = pd.to_datetime(start)
+    end = pd.to_datetime(end) + pd.Timedelta(days=1) - pd.Timedelta(seconds=1)
+    fdf = fdf[(fdf[col_date] >= start) & (fdf[col_date] <= end)].copy()
+
+if team_filter != "All games" and col_home_team and col_away_team:
+    fdf = fdf[(fdf[col_home_team] == team_filter) | (
+        fdf[col_away_team] == team_filter)].copy()
+
+
+# =============================
+# KPIs (visible + dark)
+# =============================
+c1, c2, c3 = st.columns(3)
+with c1:
+    st.metric("Games", f"{len(fdf):,}")
+with c2:
+    st.metric(
+        "Avg fatigue diff (home–away)",
+        f"{fdf[col_fatigue_diff].mean():.2f}" if col_fatigue_diff and fdf[col_fatigue_diff].notna(
+        ).any() else "—",
+    )
+with c3:
+    st.metric(
+        "Avg point diff (home–away)",
+        f"{fdf[col_point_diff].mean():.2f}" if col_point_diff and fdf[col_point_diff].notna(
+        ).any() else "—",
+    )
 
 st.divider()
 
-# -----------------------------
-# Tabs
-# -----------------------------
-tab1, tab2, tab3, tab4 = st.tabs([
-    "Win% vs Fatigue (Binned)",
-    "Point Margin vs Fatigue (Scatter)",
-    "Team Rankings (Fatigue)",
-    "Data Table"
-])
 
-# -----------------------------
-# Tab 1: Win% by fatigue difference (binned)
-# -----------------------------
-with tab1:
-    if len(f) == 0:
-        st.info("No games match your filters.")
-    else:
-        binned = compute_win_pct_by_bin(
-            f, x_col=col_fatigue_diff, win_col=col_home_win, bin_size=float(
-                bin_size)
-        )
-
-        # Plot
-        fig = px.bar(
-            binned,
-            x="fatigue_bin",
-            y="home_win_pct",
-            hover_data={"games": True,
-                        "home_win_pct": ":.3f", "fatigue_bin": True},
-        )
-        fig.update_layout(
-            xaxis_title=f"Fatigue Diff (binned, size={bin_size})",
-            yaxis_title="Home Win %",
-            yaxis_tickformat=".0%",
-            showlegend=False,
-            height=480,
-            margin=dict(l=10, r=10, t=40, b=10),
-        )
-        # Reference line at overall win %
-        overall = f[col_home_win].mean()
-        fig.add_hline(y=overall, line_width=1, line_dash="dot")
-
-        st.plotly_chart(fig, use_container_width=True)
-
-        st.caption(
-            "Interpretation: Fatigue Diff = Home fatigue score − Away fatigue score. "
-            "Negative values indicate the home team is less fatigued than the away team."
-        )
-
-# -----------------------------
-# Tab 2: Scatter (point diff vs fatigue diff) + safe trendlines
-# -----------------------------
-with tab2:
-    if len(f) == 0:
-        st.info("No games match your filters.")
-    else:
-        # Keep only finite numeric rows
-        f2 = f.copy()
-        f2[col_fatigue_diff] = numeric_safe(f2[col_fatigue_diff])
-        f2[col_point_diff] = numeric_safe(f2[col_point_diff])
-        f2 = f2.replace(
-            [np.inf, -np.inf], np.nan).dropna(subset=[col_fatigue_diff, col_point_diff])
-
-        if len(f2) == 0:
-            st.info("No valid numeric rows after cleaning.")
-        else:
-            fig = px.scatter(
-                f2,
-                x=col_fatigue_diff,
-                y=col_point_diff,
-                color="Fatigue Advantage",
-                hover_data={
-                    col_game_id: True if col_game_id else False,
-                    col_game_date: True,
-                    col_home_team: True,
-                    col_away_team: True,
-                    col_home_pts: True if col_home_pts else False,
-                    col_away_pts: True if col_away_pts else False,
-                    col_fatigue_diff: ":.3f",
-                    col_point_diff: ":.1f",
-                },
-            )
-            fig.update_layout(
-                xaxis_title="Fatigue Diff (home − away)",
-                yaxis_title="Point Diff (home − away)",
-                height=560,
-                margin=dict(l=10, r=10, t=40, b=10),
-            )
-
-            # Add safe trendlines per category (optional)
-            add_trends = st.checkbox("Show trendlines", value=True)
-            if add_trends:
-                for cat in ["Home fatigue advantage", "Away fatigue advantage", "Even"]:
-                    sub = f2[f2["Fatigue Advantage"] == cat]
-                    if len(sub) >= 12 and np.unique(sub[col_fatigue_diff]).size >= 2:
-                        fig = add_simple_trendline(
-                            fig,
-                            sub[col_fatigue_diff].to_numpy(),
-                            sub[col_point_diff].to_numpy(),
-                            name=f"Trend: {cat}",
-                        )
-
-            st.plotly_chart(fig, use_container_width=True)
-
-# -----------------------------
-# Tab 3: Team Rankings (Fatigue)
-# -----------------------------
-with tab3:
-    if len(f) == 0:
-        st.info("No games match your filters.")
-    else:
-        rank_mode = st.radio(
-            "Ranking by",
-            ["Away team fatigue", "Home team fatigue"],
-            horizontal=True,
-        )
-
-        # If matchups CSV does not have per-side fatigue scores, we compute approximate per-side fatigue
-        # using fatigue_diff + assumption about baseline is not valid, so we prefer the team_games file if present.
-        # However, your matchups file (from your pipeline) typically includes home_fatigue_score & away_fatigue_score.
-        col_home_fatigue = pick_col(
-            df, ["home_fatigue_score", "Home Fatigue Score"])
-        col_away_fatigue = pick_col(
-            df, ["away_fatigue_score", "Away Fatigue Score"])
-
-        if rank_mode == "Away team fatigue" and col_away_fatigue is not None:
-            tmp = f.copy()
-            tmp[col_away_fatigue] = numeric_safe(tmp[col_away_fatigue])
-            tmp = tmp.dropna(subset=[col_away_fatigue])
-            rank = (
-                tmp.groupby(col_away_team, as_index=False)
-                .agg(Avg_Fatigue=(col_away_fatigue, "mean"), Games=(col_away_team, "size"))
-                .sort_values("Avg_Fatigue", ascending=False)
-                .head(top_n)
-            )
-            fig = px.bar(
-                rank.sort_values("Avg_Fatigue"),
-                x="Avg_Fatigue",
-                y=col_away_team,
-                orientation="h",
-                hover_data={"Games": True, "Avg_Fatigue": ":.3f"},
-            )
-            fig.update_layout(
-                xaxis_title="Avg Away Fatigue Score",
-                yaxis_title="Away Team",
-                height=700,
-                margin=dict(l=10, r=10, t=40, b=10),
-                showlegend=False,
-            )
-            st.plotly_chart(fig, use_container_width=True)
-
-        elif rank_mode == "Home team fatigue" and col_home_fatigue is not None:
-            tmp = f.copy()
-            tmp[col_home_fatigue] = numeric_safe(tmp[col_home_fatigue])
-            tmp = tmp.dropna(subset=[col_home_fatigue])
-            rank = (
-                tmp.groupby(col_home_team, as_index=False)
-                .agg(Avg_Fatigue=(col_home_fatigue, "mean"), Games=(col_home_team, "size"))
-                .sort_values("Avg_Fatigue", ascending=False)
-                .head(top_n)
-            )
-            fig = px.bar(
-                rank.sort_values("Avg_Fatigue"),
-                x="Avg_Fatigue",
-                y=col_home_team,
-                orientation="h",
-                hover_data={"Games": True, "Avg_Fatigue": ":.3f"},
-            )
-            fig.update_layout(
-                xaxis_title="Avg Home Fatigue Score",
-                yaxis_title="Home Team",
-                height=700,
-                margin=dict(l=10, r=10, t=40, b=10),
-                showlegend=False,
-            )
-            st.plotly_chart(fig, use_container_width=True)
-
-        else:
-            # Fallback: use team_games file if provided
-            if team_games_path and Path(team_games_path).exists():
-                tg = load_csv(team_games_path)
-                tg_team = pick_col(tg, ["TEAM_NAME", "Team Name"])
-                tg_date = pick_col(tg, ["GAME_DATE", "Game Date"])
-                tg_fat = pick_col(tg, ["fatigue_score", "Fatigue Score"])
-
-                if tg_team and tg_date and tg_fat:
-                    tg[tg_date] = to_datetime_safe(tg[tg_date])
-                    tg[tg_fat] = numeric_safe(tg[tg_fat])
-                    tg = tg.dropna(subset=[tg_team, tg_date, tg_fat])
-                    tg = tg[tg[tg_team].isin(NBA_TEAMS)]
-
-                    # Apply same date + team filters
-                    if date_range is not None:
-                        start_d, end_d = date_range
-                        tg = tg[(tg[tg_date].dt.date >= start_d)
-                                & (tg[tg_date].dt.date <= end_d)]
-                    if team_selected is not None:
-                        tg = tg[tg[tg_team] == team_selected]
-
-                    rank = (
-                        tg.groupby(tg_team, as_index=False)
-                          .agg(Avg_Fatigue=(tg_fat, "mean"), Games=(tg_team, "size"))
-                          .sort_values("Avg_Fatigue", ascending=False)
-                          .head(top_n)
-                    )
-                    fig = px.bar(
-                        rank.sort_values("Avg_Fatigue"),
-                        x="Avg_Fatigue",
-                        y=tg_team,
-                        orientation="h",
-                        hover_data={"Games": True, "Avg_Fatigue": ":.3f"},
-                    )
-                    fig.update_layout(
-                        xaxis_title="Avg Fatigue Score",
-                        yaxis_title="Team",
-                        height=700,
-                        margin=dict(l=10, r=10, t=40, b=10),
-                        showlegend=False,
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
-                else:
-                    st.warning(
-                        "Rankings require either home/away fatigue score columns in matchups CSV "
-                        "or a valid team_games file containing TEAM_NAME, GAME_DATE, fatigue_score."
-                    )
-            else:
-                st.warning(
-                    "Rankings require either home/away fatigue score columns in matchups CSV "
-                    "or a valid team_games CSV path."
-                )
-
-# -----------------------------
-# Tab 4: Data Table
-# -----------------------------
-with tab4:
-    st.subheader("Filtered games (matchups)")
-    show_cols = [c for c in [
-        col_game_id, col_game_date, col_home_team, col_away_team,
-        col_home_pts, col_away_pts, col_home_win,
-        col_point_diff, col_rest_diff, col_travel_diff, col_fatigue_diff
-    ] if c is not None]
-
-    out = f[show_cols + ["Fatigue Advantage"]].copy()
-    # Sort newest first if possible
-    if col_game_date is not None:
-        out = out.sort_values(col_game_date, ascending=False)
-
-    st.dataframe(out, use_container_width=True, height=520)
-
-st.caption(
-    "Fatigue score definition (pipeline): fatigue_score = 2*(back-to-back flag) + travel_miles/1000. "
-    "This is intentionally simple and explainable for a portfolio demo."
+# =============================
+# Tabs (NO Data Table)
+# =============================
+tab1, tab2, tab3 = st.tabs(
+    ["Win% vs Fatigue (Binned)", "Point Margin vs Fatigue (Scatter)",
+     "Team Rankings (Fatigue)"]
 )
+
+
+# =============================
+# Tab 1: Win% by fatigue bins
+# =============================
+with tab1:
+    st.subheader("Win% by Fatigue Differential (Binned)")
+
+    if col_fatigue_diff is None or col_home_win is None:
+        st.warning(
+            "This chart requires fatigue_diff and a home-win indicator in the matchups CSV.")
+    else:
+        temp = fdf[[col_fatigue_diff, col_home_win]].dropna().copy()
+        b = float(bin_size)
+        temp["Fatigue Bin"] = (
+            np.floor(temp[col_fatigue_diff] / b) * b).round(2)
+
+        agg = (
+            temp.groupby("Fatigue Bin", as_index=False)
+            .agg(WinPct=(col_home_win, "mean"), Games=(col_home_win, "size"))
+            .sort_values("Fatigue Bin")
+        )
+
+        fig = px.bar(
+            agg,
+            x="Fatigue Bin",
+            y="WinPct",
+            text=agg["WinPct"].map(lambda v: f"{v:.0%}"),
+            hover_data={"Games": True, "Fatigue Bin": True, "WinPct": ":.2%"},
+        )
+        fig.update_traces(marker_color=COLOR_BAR,
+                          textposition="outside", cliponaxis=False)
+        fig.update_yaxes(tickformat=".0%")
+
+        avg = float(temp[col_home_win].mean()) if len(temp) else np.nan
+        if np.isfinite(avg):
+            fig.add_hline(y=avg, line_width=1, line_dash="dot",
+                          line_color="rgba(17,24,39,0.35)")
+
+        fig = apply_plotly_white(
+            fig, "Home Win% by Fatigue Differential", "Fatigue diff (binned)", "Home win%")
+        st.plotly_chart(fig, use_container_width=True)
+        st.caption(
+            "Negative fatigue differential means the home team is less fatigued than the away team.")
+
+
+# =============================
+# Tab 2: Scatter with differentiation + trend
+# =============================
+with tab2:
+    st.subheader("Point Margin vs Fatigue Differential")
+
+    if col_fatigue_diff is None or col_point_diff is None:
+        st.warning(
+            "This chart requires fatigue_diff and point differential in the matchups CSV.")
+    else:
+        temp = fdf[[col_fatigue_diff, col_point_diff]].dropna().copy()
+
+        def cat(v: float) -> str:
+            if v < 0:
+                return "Home advantage"
+            if v > 0:
+                return "Away advantage"
+            return "Even"
+
+        temp["Advantage"] = temp[col_fatigue_diff].apply(cat)
+
+        fig = px.scatter(
+            temp,
+            x=col_fatigue_diff,
+            y=col_point_diff,
+            color="Advantage",
+            opacity=0.75,
+            color_discrete_map={
+                "Home advantage": COLOR_HOME_ADV,
+                "Away advantage": COLOR_AWAY_ADV,
+                "Even": COLOR_NEUTRAL,
+            },
+        )
+        fig.update_traces(marker=dict(size=7))
+
+        tl = safe_trendline_xy(temp[col_fatigue_diff], temp[col_point_diff])
+        if tl is not None:
+            x_line, y_line = tl
+            fig.add_trace(
+                go.Scatter(
+                    x=x_line,
+                    y=y_line,
+                    mode="lines",
+                    line=dict(color="rgba(17,24,39,0.55)", width=2),
+                    name="Trend",
+                )
+            )
+
+        fig = apply_plotly_white(fig, "Point Margin vs Fatigue Differential",
+                                 "Fatigue diff (home–away)", "Point diff (home–away)")
+        st.plotly_chart(fig, use_container_width=True)
+        st.caption(
+            "Positive point differential means the home team won by that margin.")
+
+
+# =============================
+# Tab 3: Team Rankings (team_games CSV, NBA only)
+# =============================
+with tab3:
+    st.subheader("Team Rankings: Most Fatigued Situations")
+
+    if col_team_team is None or col_team_fatigue is None:
+        st.warning(
+            "Team rankings require TEAM_NAME and fatigue_score columns in team_games CSV.")
+    else:
+        tdf = df_team.copy()
+
+        if col_team_date:
+            tdf[col_team_date] = coerce_datetime(tdf[col_team_date])
+            if date_range:
+                start, end = date_range
+                start = pd.to_datetime(start)
+                end = pd.to_datetime(
+                    end) + pd.Timedelta(days=1) - pd.Timedelta(seconds=1)
+                tdf = tdf[(tdf[col_team_date] >= start) &
+                          (tdf[col_team_date] <= end)].copy()
+
+        tdf = keep_nba_teams(tdf, col_team_team)
+        tdf[col_team_fatigue] = safe_numeric(tdf[col_team_fatigue])
+        tdf = tdf[tdf[col_team_fatigue].notna()].copy()
+
+        if tdf.empty:
+            st.warning(
+                "No NBA teams remain after filtering. Verify team names in team_games CSV.")
+        else:
+            rank = (
+                tdf.groupby(col_team_team, as_index=False)
+                .agg(Avg_Fatigue=(col_team_fatigue, "mean"), Games=(col_team_fatigue, "size"))
+                .sort_values("Avg_Fatigue", ascending=False)
+                .head(int(top_n))
+            )
+
+            rank_plot = rank.sort_values("Avg_Fatigue", ascending=True)
+
+            fig = px.bar(
+                rank_plot,
+                x="Avg_Fatigue",
+                y=col_team_team,
+                orientation="h",
+                text=rank_plot["Avg_Fatigue"].map(lambda v: f"{v:.2f}"),
+                hover_data={"Games": True, "Avg_Fatigue": ":.2f"},
+            )
+            fig.update_traces(marker_color=COLOR_BAR,
+                              textposition="outside", cliponaxis=False)
+            fig = apply_plotly_white(
+                fig, f"Top {int(top_n)} — Avg Fatigue Score", "Avg fatigue score", "Team")
+
+            st.plotly_chart(fig, use_container_width=True)
+            st.caption(
+                "Ranking source: team_games CSV. Filtered to official NBA team names.")
+            st.caption(
+                "Fatigue score definition (pipeline): fatigue_score = 2*(back-to-back flag) + travel_miles/1000.")
