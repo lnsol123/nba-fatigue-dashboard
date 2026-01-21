@@ -1,0 +1,1059 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20243.24.1010.1014                               -->
+<workbook original-version='18.1' source-build='2024.3.0 (20243.24.1010.1014)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <AnimationOnByDefault />
+    <MarkAnimation />
+    <ObjectModelEncapsulateLegacy />
+    <ObjectModelExtractV2 />
+    <ObjectModelTableType />
+    <SchemaViewerObjectModel />
+    <SheetIdentifierTracking />
+    <_.fcp.VConnDownstreamExtractsWithWarnings.true...VConnDownstreamExtractsWithWarnings />
+    <WindowsPersistSimpleIdentifiers />
+  </document-format-change-manifest>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <datasources>
+    <datasource caption='nba_2324_fatigue_matchups' inline='true' name='federated.18kwox8027q3ay1c6bjw2090b9zq' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='nba_2324_fatigue_matchups' name='textscan.11gqt4f1b7kqbz1fs9e7u0flduvp'>
+            <connection class='textscan' directory='D:/nba-fatigue-analytics/data_processed' filename='nba_2324_fatigue_matchups.csv' password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.11gqt4f1b7kqbz1fs9e7u0flduvp' name='nba_2324_fatigue_matchups.csv' table='[nba_2324_fatigue_matchups#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='integer' name='GAME_ID' ordinal='0' />
+            <column datatype='date' name='GAME_DATE' ordinal='1' />
+            <column datatype='string' name='home_team' ordinal='2' />
+            <column datatype='string' name='home_matchup' ordinal='3' />
+            <column datatype='string' name='home_wl' ordinal='4' />
+            <column datatype='integer' name='home_pts' ordinal='5' />
+            <column datatype='real' name='home_days_rest' ordinal='6' />
+            <column datatype='integer' name='home_is_b2b' ordinal='7' />
+            <column datatype='real' name='home_travel_miles' ordinal='8' />
+            <column datatype='real' name='home_fatigue_score' ordinal='9' />
+            <column datatype='string' name='away_team' ordinal='10' />
+            <column datatype='string' name='away_matchup' ordinal='11' />
+            <column datatype='string' name='away_wl' ordinal='12' />
+            <column datatype='integer' name='away_pts' ordinal='13' />
+            <column datatype='real' name='away_days_rest' ordinal='14' />
+            <column datatype='integer' name='away_is_b2b' ordinal='15' />
+            <column datatype='real' name='away_travel_miles' ordinal='16' />
+            <column datatype='real' name='away_fatigue_score' ordinal='17' />
+            <column datatype='integer' name='home_win' ordinal='18' />
+            <column datatype='integer' name='point_diff' ordinal='19' />
+            <column datatype='real' name='rest_diff' ordinal='20' />
+            <column datatype='real' name='travel_diff' ordinal='21' />
+            <column datatype='real' name='fatigue_diff' ordinal='22' />
+          </columns>
+        </relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='character-set'>&quot;UTF-8&quot;</attribute>
+              <attribute datatype='string' name='collation'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='field-delimiter'>&quot;,&quot;</attribute>
+              <attribute datatype='string' name='header-row'>&quot;true&quot;</attribute>
+              <attribute datatype='string' name='locale'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='single-char'>&quot;&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>GAME_ID</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[GAME_ID]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>GAME_ID</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>GAME_DATE</remote-name>
+            <remote-type>133</remote-type>
+            <local-name>[GAME_DATE]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>GAME_DATE</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>home_team</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[home_team]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>home_team</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>home_matchup</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[home_matchup]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>home_matchup</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>home_wl</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[home_wl]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>home_wl</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>home_pts</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[home_pts]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>home_pts</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>home_days_rest</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[home_days_rest]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>home_days_rest</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>home_is_b2b</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[home_is_b2b]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>home_is_b2b</remote-alias>
+            <ordinal>7</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>home_travel_miles</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[home_travel_miles]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>home_travel_miles</remote-alias>
+            <ordinal>8</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>home_fatigue_score</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[home_fatigue_score]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>home_fatigue_score</remote-alias>
+            <ordinal>9</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>away_team</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[away_team]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>away_team</remote-alias>
+            <ordinal>10</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>away_matchup</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[away_matchup]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>away_matchup</remote-alias>
+            <ordinal>11</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>away_wl</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[away_wl]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>away_wl</remote-alias>
+            <ordinal>12</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>away_pts</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[away_pts]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>away_pts</remote-alias>
+            <ordinal>13</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>away_days_rest</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[away_days_rest]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>away_days_rest</remote-alias>
+            <ordinal>14</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>away_is_b2b</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[away_is_b2b]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>away_is_b2b</remote-alias>
+            <ordinal>15</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>away_travel_miles</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[away_travel_miles]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>away_travel_miles</remote-alias>
+            <ordinal>16</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>away_fatigue_score</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[away_fatigue_score]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>away_fatigue_score</remote-alias>
+            <ordinal>17</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>home_win</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[home_win]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>home_win</remote-alias>
+            <ordinal>18</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>point_diff</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[point_diff]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>point_diff</remote-alias>
+            <ordinal>19</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>rest_diff</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[rest_diff]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>rest_diff</remote-alias>
+            <ordinal>20</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>travel_diff</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[travel_diff]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>travel_diff</remote-alias>
+            <ordinal>21</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>fatigue_diff</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[fatigue_diff]</local-name>
+            <parent-name>[nba_2324_fatigue_matchups.csv]</parent-name>
+            <remote-alias>fatigue_diff</remote-alias>
+            <ordinal>22</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption='Home Win %' datatype='real' name='[Calculation_866942958294974465]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='AVG([home_win])' />
+      </column>
+      <column caption='Fatigue Advantage' datatype='string' name='[Calculation_866942958295535618]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='IF [fatigue_diff] &gt;= 0 THEN &quot;Home fatigue advantage&quot;&#13;&#10;ELSE &quot;Away fatigue advantage&quot;&#13;&#10;END' />
+      </column>
+      <column caption='Fatigue Category' datatype='string' name='[Calculation_866942958295674883]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='IF [fatigue_diff] &gt;= 1 THEN &quot;Home big advantage (≥ +1)&quot;&#13;&#10;ELSEIF [fatigue_diff] &gt;= 0 THEN &quot;Home slight advantage (0 to +1)&quot;&#13;&#10;ELSEIF [fatigue_diff] &gt;= -1 THEN &quot;Away slight advantage (-1 to 0)&quot;&#13;&#10;ELSE &quot;Away big advantage (≤ -1)&quot;&#13;&#10;END' />
+      </column>
+      <column caption='Month' datatype='datetime' name='[Calculation_866942958295855108]' role='dimension' type='ordinal'>
+        <calculation class='tableau' formula='DATETRUNC(&apos;month&apos;, [GAME_DATE])' />
+      </column>
+      <column aggregation='None' caption='Fatigue Diff (0.5)' datatype='integer' name='[Fatigue Diff (bin)]' role='dimension' type='ordinal'>
+        <calculation class='bin' decimals='-1' formula='[fatigue_diff]' peg='0' size='0.5' />
+      </column>
+      <column caption='Game Date' datatype='date' name='[GAME_DATE]' role='dimension' type='ordinal' />
+      <column caption='Game Id' datatype='integer' name='[GAME_ID]' role='dimension' type='ordinal' />
+      <column caption='nba_2324_fatigue_matchups.csv' datatype='table' name='[__tableau_internal_object_id__].[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]' role='measure' type='quantitative' />
+      <column caption='Away Days Rest' datatype='real' name='[away_days_rest]' role='measure' type='quantitative' />
+      <column caption='Away Fatigue Score' datatype='real' name='[away_fatigue_score]' role='measure' type='quantitative' />
+      <column caption='Away Is B2B' datatype='integer' name='[away_is_b2b]' role='measure' type='quantitative' />
+      <column caption='Away Matchup' datatype='string' name='[away_matchup]' role='dimension' type='nominal' />
+      <column caption='Away Pts' datatype='integer' name='[away_pts]' role='measure' type='quantitative' />
+      <column caption='Away Team' datatype='string' name='[away_team]' role='dimension' type='nominal' />
+      <column caption='Away Travel Miles' datatype='real' name='[away_travel_miles]' role='measure' type='quantitative' />
+      <column caption='Away Wl' datatype='string' name='[away_wl]' role='dimension' type='nominal' />
+      <column caption='Fatigue Diff' datatype='real' name='[fatigue_diff]' role='measure' type='quantitative' />
+      <column caption='Home Days Rest' datatype='real' name='[home_days_rest]' role='measure' type='quantitative' />
+      <column caption='Home Fatigue Score' datatype='real' name='[home_fatigue_score]' role='measure' type='quantitative' />
+      <column caption='Home Is B2B' datatype='integer' name='[home_is_b2b]' role='measure' type='quantitative' />
+      <column caption='Home Matchup' datatype='string' name='[home_matchup]' role='dimension' type='nominal' />
+      <column caption='Home Pts' datatype='integer' name='[home_pts]' role='measure' type='quantitative' />
+      <column caption='Home Team' datatype='string' name='[home_team]' role='dimension' type='nominal' />
+      <column caption='Home Travel Miles' datatype='real' name='[home_travel_miles]' role='measure' type='quantitative' />
+      <column caption='Home Win' datatype='integer' name='[home_win]' role='measure' type='quantitative' />
+      <column caption='Point Diff' datatype='integer' name='[point_diff]' role='measure' type='quantitative' />
+      <column caption='Rest Diff' datatype='real' name='[rest_diff]' role='measure' type='quantitative' />
+      <column caption='Travel Diff' datatype='real' name='[travel_diff]' role='measure' type='quantitative' />
+      <extract _.fcp.VConnDownstreamExtractsWithWarnings.true...user-specific='false' count='-1' enabled='true' object-id='' units='records'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='C:/Users/allen/AppData/Local/Temp/TableauTemp/#TableauTemp_1qpiu7a16te7ju1gjebyv0qbc916.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='01/20/2026 07:43:20 PM' username='tableau_internal_user'>
+          <relation name='Extract' table='[Extract].[Extract]' type='table' />
+          <metadata-records>
+            <metadata-record class='column'>
+              <remote-name>GAME_ID</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[GAME_ID]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>GAME_ID</remote-alias>
+              <ordinal>0</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>1385</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>GAME_DATE</remote-name>
+              <remote-type>133</remote-type>
+              <local-name>[GAME_DATE]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>GAME_DATE</remote-alias>
+              <ordinal>1</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>date</local-type>
+              <aggregation>Year</aggregation>
+              <approx-count>218</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>home_team</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[home_team]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>home_team</remote-alias>
+              <ordinal>2</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>34</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RUS' />
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>home_matchup</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[home_matchup]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>home_matchup</remote-alias>
+              <ordinal>3</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>807</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RUS' />
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>home_wl</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[home_wl]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>home_wl</remote-alias>
+              <ordinal>4</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>3</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RUS' />
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>home_pts</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[home_pts]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>home_pts</remote-alias>
+              <ordinal>5</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>79</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>home_days_rest</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[home_days_rest]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>home_days_rest</remote-alias>
+              <ordinal>6</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>10</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>home_is_b2b</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[home_is_b2b]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>home_is_b2b</remote-alias>
+              <ordinal>7</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>2</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>home_travel_miles</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[home_travel_miles]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>home_travel_miles</remote-alias>
+              <ordinal>8</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>275</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>home_fatigue_score</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[home_fatigue_score]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>home_fatigue_score</remote-alias>
+              <ordinal>9</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>314</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>away_team</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[away_team]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>away_team</remote-alias>
+              <ordinal>10</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>37</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RUS' />
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>away_matchup</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[away_matchup]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>away_matchup</remote-alias>
+              <ordinal>11</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>807</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RUS' />
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>away_wl</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[away_wl]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>away_wl</remote-alias>
+              <ordinal>12</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>2</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RUS' />
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>away_pts</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[away_pts]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>away_pts</remote-alias>
+              <ordinal>13</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>79</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>away_days_rest</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[away_days_rest]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>away_days_rest</remote-alias>
+              <ordinal>14</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>9</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>away_is_b2b</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[away_is_b2b]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>away_is_b2b</remote-alias>
+              <ordinal>15</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>2</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>away_travel_miles</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[away_travel_miles]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>away_travel_miles</remote-alias>
+              <ordinal>16</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>326</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>away_fatigue_score</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[away_fatigue_score]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>away_fatigue_score</remote-alias>
+              <ordinal>17</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>434</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>home_win</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[home_win]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>home_win</remote-alias>
+              <ordinal>18</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>2</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>point_diff</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[point_diff]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>point_diff</remote-alias>
+              <ordinal>19</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>92</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>rest_diff</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[rest_diff]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>rest_diff</remote-alias>
+              <ordinal>20</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>15</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>travel_diff</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[travel_diff]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>travel_diff</remote-alias>
+              <ordinal>21</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>696</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>fatigue_diff</remote-name>
+              <remote-type>5</remote-type>
+              <local-name>[fatigue_diff]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>fatigue_diff</remote-alias>
+              <ordinal>22</ordinal>
+              <family>nba_2324_fatigue_matchups.csv</family>
+              <local-type>real</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>814</approx-count>
+              <contains-null>true</contains-null>
+              <object-id>[nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD]</object-id>
+            </metadata-record>
+          </metadata-records>
+        </connection>
+      </extract>
+      <layout dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;United States&quot;' />
+      </semantic-values>
+      <field-sort-info field-sort-order-type='custom-order'>
+        <field-sort-custom-order field='GAME_ID' />
+        <field-sort-custom-order field='GAME_DATE' />
+        <field-sort-custom-order field='home_team' />
+        <field-sort-custom-order field='Calculation_866942958295855108' />
+        <field-sort-custom-order field='home_matchup' />
+        <field-sort-custom-order field='home_wl' />
+        <field-sort-custom-order field='home_pts' />
+        <field-sort-custom-order field='home_days_rest' />
+        <field-sort-custom-order field='home_is_b2b' />
+        <field-sort-custom-order field='home_travel_miles' />
+        <field-sort-custom-order field='home_fatigue_score' />
+        <field-sort-custom-order field='away_team' />
+        <field-sort-custom-order field='away_matchup' />
+        <field-sort-custom-order field='away_wl' />
+        <field-sort-custom-order field='away_pts' />
+        <field-sort-custom-order field='away_days_rest' />
+        <field-sort-custom-order field='away_is_b2b' />
+        <field-sort-custom-order field='away_travel_miles' />
+        <field-sort-custom-order field='away_fatigue_score' />
+        <field-sort-custom-order field='home_win' />
+        <field-sort-custom-order field='Calculation_866942958294974465' />
+        <field-sort-custom-order field='point_diff' />
+        <field-sort-custom-order field='rest_diff' />
+        <field-sort-custom-order field='travel_diff' />
+        <field-sort-custom-order field='fatigue_diff' />
+        <field-sort-custom-order field='Calculation_866942958295674883' />
+        <field-sort-custom-order field='Calculation_866942958295535618' />
+        <field-sort-custom-order field='Geometry (generated)' />
+        <field-sort-custom-order field='Latitude (generated)' />
+        <field-sort-custom-order field='Longitude (generated)' />
+        <field-sort-custom-order field=':Measure Names' />
+        <field-sort-custom-order field='Multiple Values' />
+      </field-sort-info>
+      <object-graph>
+        <objects>
+          <object caption='nba_2324_fatigue_matchups.csv' id='nba_2324_fatigue_matchups.csv_5C7E3D7EA3294E078EB0BB0F4F350BFD'>
+            <properties context=''>
+              <relation connection='textscan.11gqt4f1b7kqbz1fs9e7u0flduvp' name='nba_2324_fatigue_matchups.csv' table='[nba_2324_fatigue_matchups#csv]' type='table'>
+                <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+                  <column datatype='integer' name='GAME_ID' ordinal='0' />
+                  <column datatype='date' name='GAME_DATE' ordinal='1' />
+                  <column datatype='string' name='home_team' ordinal='2' />
+                  <column datatype='string' name='home_matchup' ordinal='3' />
+                  <column datatype='string' name='home_wl' ordinal='4' />
+                  <column datatype='integer' name='home_pts' ordinal='5' />
+                  <column datatype='real' name='home_days_rest' ordinal='6' />
+                  <column datatype='integer' name='home_is_b2b' ordinal='7' />
+                  <column datatype='real' name='home_travel_miles' ordinal='8' />
+                  <column datatype='real' name='home_fatigue_score' ordinal='9' />
+                  <column datatype='string' name='away_team' ordinal='10' />
+                  <column datatype='string' name='away_matchup' ordinal='11' />
+                  <column datatype='string' name='away_wl' ordinal='12' />
+                  <column datatype='integer' name='away_pts' ordinal='13' />
+                  <column datatype='real' name='away_days_rest' ordinal='14' />
+                  <column datatype='integer' name='away_is_b2b' ordinal='15' />
+                  <column datatype='real' name='away_travel_miles' ordinal='16' />
+                  <column datatype='real' name='away_fatigue_score' ordinal='17' />
+                  <column datatype='integer' name='home_win' ordinal='18' />
+                  <column datatype='integer' name='point_diff' ordinal='19' />
+                  <column datatype='real' name='rest_diff' ordinal='20' />
+                  <column datatype='real' name='travel_diff' ordinal='21' />
+                  <column datatype='real' name='fatigue_diff' ordinal='22' />
+                </columns>
+              </relation>
+            </properties>
+            <properties context='extract'>
+              <relation name='Extract' table='[Extract].[Extract]' type='table' />
+            </properties>
+          </object>
+        </objects>
+      </object-graph>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Point Margin vs Fatigue Difference (Scatter)'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='nba_2324_fatigue_matchups' name='federated.18kwox8027q3ay1c6bjw2090b9zq' />
+          </datasources>
+          <datasource-dependencies datasource='federated.18kwox8027q3ay1c6bjw2090b9zq'>
+            <column caption='Fatigue Advantage' datatype='string' name='[Calculation_866942958295535618]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='IF [fatigue_diff] &gt;= 0 THEN &quot;Home fatigue advantage&quot;&#13;&#10;ELSE &quot;Away fatigue advantage&quot;&#13;&#10;END' />
+            </column>
+            <column caption='Game Id' datatype='integer' name='[GAME_ID]' role='dimension' type='ordinal' />
+            <column-instance column='[fatigue_diff]' derivation='Avg' name='[avg:fatigue_diff:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[point_diff]' derivation='Avg' name='[avg:point_diff:qk]' pivot='key' type='quantitative' />
+            <column caption='Fatigue Diff' datatype='real' name='[fatigue_diff]' role='measure' type='quantitative' />
+            <column-instance column='[Calculation_866942958295535618]' derivation='None' name='[none:Calculation_866942958295535618:nk]' pivot='key' type='nominal' />
+            <column-instance column='[GAME_ID]' derivation='None' name='[none:GAME_ID:ok]' pivot='key' type='ordinal' />
+            <column caption='Point Diff' datatype='integer' name='[point_diff]' role='measure' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Circle' />
+            <encodings>
+              <color column='[federated.18kwox8027q3ay1c6bjw2090b9zq].[none:Calculation_866942958295535618:nk]' />
+              <lod column='[federated.18kwox8027q3ay1c6bjw2090b9zq].[none:GAME_ID:ok]' />
+            </encodings>
+            <trendline enable-confidence-bands='false' enable-instant-analytics='true' enabled='true' exclude-color='false' exclude-intercept='false' fit='linear' />
+          </pane>
+        </panes>
+        <rows>[federated.18kwox8027q3ay1c6bjw2090b9zq].[avg:point_diff:qk]</rows>
+        <cols>[federated.18kwox8027q3ay1c6bjw2090b9zq].[avg:fatigue_diff:qk]</cols>
+      </table>
+      <simple-id uuid='{5D437CF9-E4F6-4411-8A6E-61B2722FB988}' />
+    </worksheet>
+    <worksheet name='Team Rankings: Most Fatigued Situations'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='nba_2324_fatigue_matchups' name='federated.18kwox8027q3ay1c6bjw2090b9zq' />
+          </datasources>
+          <datasource-dependencies datasource='federated.18kwox8027q3ay1c6bjw2090b9zq'>
+            <column caption='Fatigue Category' datatype='string' name='[Calculation_866942958295674883]' role='dimension' type='nominal'>
+              <calculation class='tableau' formula='IF [fatigue_diff] &gt;= 1 THEN &quot;Home big advantage (≥ +1)&quot;&#13;&#10;ELSEIF [fatigue_diff] &gt;= 0 THEN &quot;Home slight advantage (0 to +1)&quot;&#13;&#10;ELSEIF [fatigue_diff] &gt;= -1 THEN &quot;Away slight advantage (-1 to 0)&quot;&#13;&#10;ELSE &quot;Away big advantage (≤ -1)&quot;&#13;&#10;END' />
+            </column>
+            <column-instance column='[away_fatigue_score]' derivation='Avg' name='[avg:away_fatigue_score:qk]' pivot='key' type='quantitative' />
+            <column caption='Away Fatigue Score' datatype='real' name='[away_fatigue_score]' role='measure' type='quantitative' />
+            <column caption='Away Team' datatype='string' name='[away_team]' role='dimension' type='nominal' />
+            <column caption='Fatigue Diff' datatype='real' name='[fatigue_diff]' role='measure' type='quantitative' />
+            <column-instance column='[Calculation_866942958295674883]' derivation='None' name='[none:Calculation_866942958295674883:nk]' pivot='key' type='nominal' />
+            <column-instance column='[away_team]' derivation='None' name='[none:away_team:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.18kwox8027q3ay1c6bjw2090b9zq].[none:Calculation_866942958295674883:nk]'>
+            <groupfilter function='union' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[none:Calculation_866942958295674883:nk]' member='&quot;Away big advantage (≤ -1)&quot;' />
+              <groupfilter function='member' level='[none:Calculation_866942958295674883:nk]' member='&quot;Away slight advantage (-1 to 0)&quot;' />
+            </groupfilter>
+          </filter>
+          <filter class='categorical' column='[federated.18kwox8027q3ay1c6bjw2090b9zq].[none:away_team:nk]'>
+            <groupfilter function='except' user:ui-domain='database' user:ui-enumeration='exclusive' user:ui-marker='enumerate'>
+              <groupfilter function='level-members' level='[none:away_team:nk]' />
+              <groupfilter function='union'>
+                <groupfilter function='member' level='[none:away_team:nk]' member='&quot;Cairns Taipans&quot;' />
+                <groupfilter function='member' level='[none:away_team:nk]' member='&quot;Flamengo Flamengo&quot;' />
+                <groupfilter function='member' level='[none:away_team:nk]' member='&quot;Ra&apos;anana Maccabi Ra&apos;anana&quot;' />
+                <groupfilter function='member' level='[none:away_team:nk]' member='&quot;Team Detlef&quot;' />
+                <groupfilter function='member' level='[none:away_team:nk]' member='&quot;Team Jalen&quot;' />
+                <groupfilter function='member' level='[none:away_team:nk]' member='&quot;Team Shannon&quot;' />
+                <groupfilter function='member' level='[none:away_team:nk]' member='&quot;West NBA All Stars West&quot;' />
+              </groupfilter>
+            </groupfilter>
+          </filter>
+          <slices>
+            <column>[federated.18kwox8027q3ay1c6bjw2090b9zq].[none:Calculation_866942958295674883:nk]</column>
+            <column>[federated.18kwox8027q3ay1c6bjw2090b9zq].[none:away_team:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <encoding attr='space' class='0' field='[federated.18kwox8027q3ay1c6bjw2090b9zq].[avg:away_fatigue_score:qk]' field-type='quantitative' max='0.88882959057929223' min='0.0' range-type='fixed' scope='cols' type='space' />
+          </style-rule>
+          <style-rule element='header'>
+            <format attr='width' field='[federated.18kwox8027q3ay1c6bjw2090b9zq].[none:away_team:nk]' value='220' />
+          </style-rule>
+          <style-rule element='label'>
+            <format attr='text-format' field='[federated.18kwox8027q3ay1c6bjw2090b9zq].[avg:away_fatigue_score:qk]' value='' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols>[federated.18kwox8027q3ay1c6bjw2090b9zq].[avg:away_fatigue_score:qk]</cols>
+      </table>
+      <simple-id uuid='{CE8A925C-FD25-4C83-99C0-F40ED173BFE4}' />
+    </worksheet>
+    <worksheet name='Win% by Fatigue Difference (Binned)'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='nba_2324_fatigue_matchups' name='federated.18kwox8027q3ay1c6bjw2090b9zq' />
+          </datasources>
+          <datasource-dependencies datasource='federated.18kwox8027q3ay1c6bjw2090b9zq'>
+            <column caption='Home Win %' datatype='real' name='[Calculation_866942958294974465]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='AVG([home_win])' />
+            </column>
+            <column aggregation='None' caption='Fatigue Diff (0.5)' datatype='integer' name='[Fatigue Diff (bin)]' role='dimension' type='ordinal'>
+              <calculation class='bin' decimals='-1' formula='[fatigue_diff]' peg='0' size='0.5' />
+            </column>
+            <column caption='Fatigue Diff' datatype='real' name='[fatigue_diff]' role='measure' type='quantitative' />
+            <column caption='Home Win' datatype='integer' name='[home_win]' role='measure' type='quantitative' />
+            <column-instance column='[Fatigue Diff (bin)]' derivation='None' name='[none:Fatigue Diff (bin):ok]' pivot='key' type='ordinal' />
+            <column-instance column='[Calculation_866942958294974465]' derivation='User' name='[usr:Calculation_866942958294974465:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='label'>
+            <format attr='text-format' field='[federated.18kwox8027q3ay1c6bjw2090b9zq].[usr:Calculation_866942958294974465:qk]' value='p0%' />
+          </style-rule>
+          <style-rule element='refline'>
+            <format attr='fill-above' id='refline0' value='#00000000' />
+            <format attr='fill-below' id='refline0' value='#00000000' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <reference-line axis-column='[federated.18kwox8027q3ay1c6bjw2090b9zq].[usr:Calculation_866942958294974465:qk]' enable-instant-analytics='true' formula='average' id='refline0' label-type='automatic' probability='95' scope='per-pane' value-column='[federated.18kwox8027q3ay1c6bjw2090b9zq].[usr:Calculation_866942958294974465:qk]' z-order='1' />
+          </pane>
+        </panes>
+        <rows>[federated.18kwox8027q3ay1c6bjw2090b9zq].[usr:Calculation_866942958294974465:qk]</rows>
+        <cols>[federated.18kwox8027q3ay1c6bjw2090b9zq].[none:Fatigue Diff (bin):ok]</cols>
+        <show-full-range>
+          <column>[federated.18kwox8027q3ay1c6bjw2090b9zq].[Fatigue Diff (bin)]</column>
+        </show-full-range>
+      </table>
+      <simple-id uuid='{D88C1CB3-BB05-4B80-9F58-AB7A190F17E9}' />
+    </worksheet>
+  </worksheets>
+  <windows source-height='44'>
+    <window class='worksheet' name='Win% by Fatigue Difference (Binned)'>
+      <cards>
+        <edge name='left'>
+          <strip size='100'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='30'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{16A266FB-337D-42DC-9E1E-05D01AE2B0A6}' />
+    </window>
+    <window class='worksheet' name='Point Margin vs Fatigue Difference (Scatter)'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='30'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='0' param='[federated.18kwox8027q3ay1c6bjw2090b9zq].[none:Calculation_866942958295535618:nk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{1B017768-0559-4569-8354-576B5C098810}' />
+    </window>
+    <window class='worksheet' maximized='true' name='Team Rankings: Most Fatigued Situations'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='30'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <zoom type='entire-view' />
+      </viewpoint>
+      <simple-id uuid='{35A14C83-A823-47CE-9274-4469E62DF5E7}' />
+    </window>
+  </windows>
+</workbook>
